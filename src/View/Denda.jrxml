@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DendaBahanPustaka" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="16d62f7b-ab89-44fa-8d2e-8f3fcae33236">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="no_anggota" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tgl_kembali_aktual" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="printed" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     TBL_Bahan_Pustaka."judul_buku" AS TBL_Bahan_Pustaka_judul_buku,
+	Convert(int, denda/500) as Hari, 
+     TBL_Detil_Transaksi."tgl_kembali_aktual" AS TBL_Detil_Transaksi_tgl_kembali_aktual,
+     TBL_Detil_Transaksi."denda" AS TBL_Detil_Transaksi_denda
+FROM
+     "dbo"."TBL_Bahan_Pustaka" TBL_Bahan_Pustaka INNER JOIN "dbo"."TBL_Detil_Transaksi" TBL_Detil_Transaksi ON TBL_Bahan_Pustaka."no_katalog" = TBL_Detil_Transaksi."no_katalog"
+     INNER JOIN "dbo"."TBL_Transaksi" TBL_Transaksi ON TBL_Detil_Transaksi."id_transaksi" = TBL_Transaksi."id_transaksi"
+WHERE
+     no_anggota = $P{no_anggota}
+
+ AND tgl_kembali_aktual = $P{tgl_kembali_aktual}
+ AND denda > 0
+ AND printed = $P{printed}]]>
+	</queryString>
+	<field name="TBL_Bahan_Pustaka_judul_buku" class="java.lang.String"/>
+	<field name="Hari" class="java.lang.Integer"/>
+	<field name="TBL_Detil_Transaksi_tgl_kembali_aktual" class="java.sql.Date"/>
+	<field name="TBL_Detil_Transaksi_denda" class="java.math.BigDecimal"/>
+	<variable name="totalDenda" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{TBL_Detil_Transaksi_denda}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="109" splitType="Stretch">
+			<staticText>
+				<reportElement x="13" y="83" width="325" height="20" uuid="f019d405-b2cc-4c2b-a0a5-b0a6e377bfd0"/>
+				<text><![CDATA[Bukti Pembayaran Denda Pengembalian Bahan Pustaka :]]></text>
+			</staticText>
+			<image>
+				<reportElement x="14" y="7" width="308" height="67" uuid="25df6fc9-a833-4750-b579-d2f5e933ae97"/>
+				<imageExpression><![CDATA["C:\\Users\\Well's-Comp\\Documents\\NetBeansProjects\\ILUSI_7320\\src\\Images\\Untitled-1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="50" y="2" width="124" height="20" uuid="398660d2-9f52-4d0a-8bf8-7e91b870465d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Judul Buku]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="2" width="121" height="20" uuid="5cbccd06-0035-4b70-be40-014191e03724"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Denda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="14" y="2" width="34" height="20" uuid="8fa9dbab-aa4c-4845-ba88-4191ed504fd4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="2" width="117" height="20" uuid="5bcf12de-a51a-40bb-af84-73931ba32a70"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Keterlambatan (Hari)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="2" width="122" height="20" uuid="13435603-f3d2-4625-9c2a-79a296fd4640"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pengembalian]]></text>
+			</staticText>
+			<line>
+				<reportElement x="13" y="22" width="525" height="1" uuid="b5d65429-a5c7-43fc-803c-ebfd40178489"/>
+			</line>
+			<line>
+				<reportElement x="13" y="1" width="525" height="1" uuid="4cc703aa-35d8-46ad-aaf4-f802b2bed104"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="50" y="0" width="124" height="20" uuid="7bf15048-2aff-48a6-85fb-00e0669d3fc2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TBL_Bahan_Pustaka_judul_buku}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="0" width="121" height="20" uuid="813c0a38-406d-42ac-a2d6-83f3e0467d0a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TBL_Detil_Transaksi_denda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="14" y="0" width="34" height="20" uuid="2b4a4867-22f4-46ae-8c3e-5cd6a6ca69f9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="299" y="0" width="117" height="20" uuid="784bd1ed-7243-4097-9a3e-48ae16964253"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Hari}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="175" y="0" width="122" height="20" uuid="846d98ae-8f34-4b6b-afbb-24dfbed4451e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TBL_Detil_Transaksi_tgl_kembali_aktual}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="13" y="20" width="525" height="1" uuid="0af5f3e9-652c-4a05-955e-7c66926f8626"/>
+			</line>
+			<line>
+				<reportElement x="13" y="-23" width="1" height="43" uuid="80ea78f1-15c1-4b62-8360-d6f7a972347b"/>
+			</line>
+			<line>
+				<reportElement x="49" y="-23" width="1" height="43" uuid="21052c62-449e-4698-a20e-44ab6cbb839b"/>
+			</line>
+			<line>
+				<reportElement x="174" y="-24" width="1" height="44" uuid="ef499e1a-79f2-4b3e-b021-6a3836b3d71e"/>
+			</line>
+			<line>
+				<reportElement x="298" y="-23" width="1" height="43" uuid="79a6300e-a06c-4b7b-bf40-f5a2c87b3184"/>
+			</line>
+			<line>
+				<reportElement x="416" y="-23" width="1" height="43" uuid="d37bef46-61f5-45c2-9f14-985f37ece212"/>
+			</line>
+			<line>
+				<reportElement x="538" y="-23" width="1" height="43" uuid="58d0524d-f094-460c-ba88-532b0e6af415"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement x="322" y="6" width="117" height="20" uuid="227391dc-c10f-492c-93c3-1a7b84691c85"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Total Denda : Rp.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="439" y="6" width="99" height="20" uuid="8a9c9cec-588b-43ee-ae89-d2f8b7ad4267"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalDenda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<textField>
+				<reportElement x="438" y="24" width="100" height="20" uuid="b5a0a0c1-d552-4bd8-9629-543490c3c989"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
